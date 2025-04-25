@@ -13,6 +13,15 @@ This repository provides a minimal, standalone Apache Airflow 3.0 deployment usi
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
+## Setting the Right Airflow User
+On Linux, the quick-start needs to know your host user ID and needs to have group ID set to 0. Otherwise, the files created in `dags`, `logs`, `plugins`, and `config` will be created with root user ownership, leading to permission issues. To configure this for Docker Compose:
+
+Run the following commands in the project directory:
+```bash
+mkdir -p ./dags ./logs ./plugins ./config
+echo -e "AIRFLOW_UID=$(id -u)" > .env
+```
+
 ## Quick Start
 1. **Clone the repository**:
    ```bash
@@ -27,26 +36,26 @@ This repository provides a minimal, standalone Apache Airflow 3.0 deployment usi
    ```bash
    docker compose up airflow-init
    ```
-   - On all operating systems, you need to run database migrations and create the first user account. After initialization is complete, you should see a message like this:
+   - This runs database migrations and creates the first user account. After completion, you should see:
      ```
      airflow-init_1       | Upgrades done
      airflow-init_1       | Admin user airflow created
      airflow-init_1       | 3.0.0
      start_airflow-init_1 exited with code 0
      ```
-   - The account created has the login `airflow` and the password `airflow`.
+   - The default account credentials are `airflow` / `airflow`.
 4. **Start all services**:
    ```bash
    docker compose up -d
    ```
 5. **Access the Airflow UI**:
    - Visit [http://localhost:8080](http://localhost:8080)
-   - Default credentials: `airflow` / `airflow`
+   - Log in with `airflow` / `airflow`.
 
 ## Configuration
 - **requirements.txt**: Add Python dependencies for your DAGs.
 - **Environment Variables**: Customize via `.env` file (see [Airflow Docs](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html#setting-the-right-airflow-user)).
-- **Fernet Key**: Set `AIRFLOW__CORE__FERNET_KEY` for production (generate with `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`).
+- **Fernet Key**: For production, set `AIRFLOW__CORE__FERNET_KEY` (generate with `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`).
 
 ## Optional Services
 - **Triggerer**: Enable for deferred tasks (e.g., sensors). Disable by commenting out `airflow-triggerer` in `docker-compose.yml`.
@@ -54,12 +63,10 @@ This repository provides a minimal, standalone Apache Airflow 3.0 deployment usi
 
 ## Cleaning Up
 To reset the environment:
-- The docker-compose environment is a “quick-start” one, not designed for production, and the best way to recover from any problem is to clean it up and restart from scratch.
 1. **Stop and remove containers**:
    ```bash
    docker compose down --volumes --remove-orphans
    ```
-   - Run this command in the directory containing the `docker-compose.yaml` file.
 2. **Delete the project directory**:
    ```bash
    rm -rf airflow-standalone
