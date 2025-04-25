@@ -62,12 +62,12 @@ To reset the environment:
    - Run this command in the directory containing the `docker-compose.yaml` file.
 2. **Delete the project directory**:
    ```bash
-   rm -rf airflow-3.0-standalone
+   rm -rf airflow-standalone
    ```
 3. **Re-clone and start over**:
    ```bash
-   git clone https://github.com/your-username/airflow-3.0-standalone.git
-   cd airflow-3.0-standalone
+   git clone https://github.com/xtructt/airflow-standalone.git
+   cd airflow-standalone
    ```
 
 ## Troubleshooting
