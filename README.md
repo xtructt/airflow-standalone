@@ -13,26 +13,23 @@ This repository provides a minimal, standalone Apache Airflow 3.0 deployment usi
 - [Docker](https://docs.docker.com/get-docker/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-## Setting the Right Airflow User
-On Linux, the quick-start needs to know your host user ID and needs to have group ID set to 0. Otherwise, the files created in `dags`, `logs`, `plugins`, and `config` will be created with root user ownership, leading to permission issues. To configure this for Docker Compose:
-
-Run the following commands in the project directory:
-```bash
-mkdir -p ./dags ./logs ./plugins ./config
-echo -e "AIRFLOW_UID=$(id -u)" > .env
-```
-
 ## Quick Start
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/xtructt/airflow-standalone.git
    cd airflow-standalone
    ```
-2. **Build the Docker image**:
+2. **Set up directories and Airflow user** (Linux only):
+   - On Linux, create the necessary directories and set the `AIRFLOW_UID` to avoid permission issues:
+     ```bash
+     mkdir -p ./dags ./logs ./plugins ./config
+     echo -e "AIRFLOW_UID=$(id -u)" > .env
+     ```
+3. **Build the Docker image**:
    ```bash
    docker compose build
    ```
-3. **Initialize the database**:
+4. **Initialize the database**:
    ```bash
    docker compose up airflow-init
    ```
@@ -44,11 +41,11 @@ echo -e "AIRFLOW_UID=$(id -u)" > .env
      start_airflow-init_1 exited with code 0
      ```
    - The default account credentials are `airflow` / `airflow`.
-4. **Start all services**:
+5. **Start all services**:
    ```bash
    docker compose up -d
    ```
-5. **Access the Airflow UI**:
+6. **Access the Airflow UI**:
    - Visit [http://localhost:8080](http://localhost:8080)
    - Log in with `airflow` / `airflow`.
 
